@@ -1,20 +1,30 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\CandidatureController;
 use Illuminate\Support\Facades\Route;
 
+// Page d'accueil → redirige vers la liste
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('candidatures.index');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
+// Toutes les routes candidatures protégées par auth
 Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // CRUD principal
+    Route::resource('candidatures', CandidatureController::class);
+
+    // Archivage et restauration
+    Route::delete('candidatures/{id}/archive', [CandidatureController::class, 'archive'])
+        ->name('candidatures.archive');
+
+    Route::post('candidatures/{id}/restore', [CandidatureController::class, 'restore'])
+        ->name('candidatures.restore');
+
+    // Page archives
+    Route::get('archives', [CandidatureController::class, 'archives'])
+        ->name('candidatures.archives');
+
 });
 
 require __DIR__.'/auth.php';
