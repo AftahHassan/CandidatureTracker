@@ -2,23 +2,21 @@
 
 namespace App\Providers;
 
+use App\Models\Candidature;
+use App\Policies\CandidaturePolicy;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
-    /**
-     * Register any application services.
-     */
     public function register(): void
     {
         //
     }
 
-    /**
-     * Bootstrap any application services.
-     */
     public function boot(): void
     {
-        //
+        // Enregistrement de la Policy
+        Gate::policy(Candidature::class, CandidaturePolicy::class);
     }
 }
