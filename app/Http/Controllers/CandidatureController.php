@@ -6,13 +6,14 @@ use App\Models\Candidature;
 use App\Http\Requests\StoreCandidatureRequest;
 use App\Http\Requests\UpdateCandidatureRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
-class CandidatureController extends Controller
+class CandidatureController
 {
-    // Liste des candidatures actives + filtres
     public function index(Request $request)
     {
-        $query = Candidature::where('user_id', auth()->id());
+        $query = Candidature::where('user_id', auth()->id())
+                            ->with('entretiens');
 
         if ($request->filled('statut')) {
             $query->where('statut', $request->statut);
@@ -27,13 +28,11 @@ class CandidatureController extends Controller
         return view('candidatures.index', compact('candidatures'));
     }
 
-    // Formulaire de création
     public function create()
     {
         return view('candidatures.create');
     }
 
-    // Enregistrer en base
     public function store(StoreCandidatureRequest $request)
     {
         Candidature::create([
@@ -45,48 +44,38 @@ class CandidatureController extends Controller
             ->with('success', 'Candidature ajoutée avec succès !');
     }
 
-    // Détail d'une candidature
     public function show(Candidature $candidature)
     {
-        $this->authorize('view', $candidature);
-
-        $candidature->load('entretiens'); // évite le N+1
-
+        Gate::authorize('view', $candidature);
+        $candidature->load('entretiens');
         return view('candidatures.show', compact('candidature'));
     }
 
-    // Formulaire de modification
     public function edit(Candidature $candidature)
     {
-        $this->authorize('update', $candidature);
-
+        Gate::authorize('update', $candidature);
         return view('candidatures.edit', compact('candidature'));
     }
 
-    // Modifier en base
     public function update(UpdateCandidatureRequest $request, Candidature $candidature)
     {
-        $this->authorize('update', $candidature);
-
+        Gate::authorize('update', $candidature);
         $candidature->update($request->validated());
 
         return redirect()->route('candidatures.index')
             ->with('success', 'Candidature modifiée avec succès !');
     }
 
-    // Archiver (soft delete)
     public function archive($id)
     {
         $candidature = Candidature::findOrFail($id);
-        $this->authorize('delete', $candidature);
-
-        $candidature->delete(); // soft delete grâce à SoftDeletes
+        Gate::authorize('delete', $candidature);
+        $candidature->delete();
 
         return redirect()->route('candidatures.index')
             ->with('success', 'Candidature archivée.');
     }
 
-    // Page archives
     public function archives()
     {
         $candidatures = Candidature::onlyTrashed()
@@ -97,22 +86,19 @@ class CandidatureController extends Controller
         return view('candidatures.archives', compact('candidatures'));
     }
 
-    // Restaurer une candidature archivée
     public function restore($id)
     {
         $candidature = Candidature::onlyTrashed()->findOrFail($id);
-        $this->authorize('delete', $candidature);
-
+        Gate::authorize('delete', $candidature);
         $candidature->restore();
 
         return redirect()->route('candidatures.archives')
             ->with('success', 'Candidature restaurée.');
     }
 
-    // Supprimer définitivement (destroy non utilisé pour l'instant)
     public function destroy(Candidature $candidature)
     {
-        $this->authorize('delete', $candidature);
+        Gate::authorize('delete', $candidature);
         $candidature->forceDelete();
 
         return redirect()->route('candidatures.index');
