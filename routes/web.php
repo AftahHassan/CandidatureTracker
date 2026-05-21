@@ -1,31 +1,51 @@
 <?php
 
 use App\Http\Controllers\CandidatureController;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EntretienController;
+use Illuminate\Support\Facades\Route;
 
-// Page d'accueil → redirige vers la liste
+// ─── Redirection racine ───────────────────────────────────────
 Route::get('/', function () {
     return redirect()->route('candidatures.index');
 });
 
-// Toutes les routes candidatures protégées par auth
+// ─── Dashboard (requis par Breeze après login) ────────────────
+Route::get('/dashboard', function () {
+    return redirect()->route('candidatures.index');
+})->middleware(['auth'])->name('dashboard');
+
+// ─── Routes protégées ────────────────────────────────────────
 Route::middleware('auth')->group(function () {
 
-    // CRUD principal
+    // Candidatures — CRUD principal
     Route::resource('candidatures', CandidatureController::class);
 
-    // Archivage et restauration
+    // Archiver (soft delete)
     Route::delete('candidatures/{id}/archive', [CandidatureController::class, 'archive'])
         ->name('candidatures.archive');
-
-    Route::post('candidatures/{id}/restore', [CandidatureController::class, 'restore'])
-        ->name('candidatures.restore');
 
     // Page archives
     Route::get('archives', [CandidatureController::class, 'archives'])
         ->name('candidatures.archives');
 
+    // Restaurer une candidature archivée
+    Route::post('candidatures/{id}/restore', [CandidatureController::class, 'restore'])
+        ->name('candidatures.restore');
+
+    // Entretiens (imbriqués sous candidatures)
+    Route::post('candidatures/{candidature}/entretiens', [EntretienController::class, 'store'])
+        ->name('entretiens.store');
+
+    Route::get('candidatures/{candidature}/entretiens/{entretien}/edit', [EntretienController::class, 'edit'])
+        ->name('entretiens.edit');
+
+    Route::put('candidatures/{candidature}/entretiens/{entretien}', [EntretienController::class, 'update'])
+        ->name('entretiens.update');
+
+    Route::delete('candidatures/{candidature}/entretiens/{entretien}', [EntretienController::class, 'destroy'])
+        ->name('entretiens.destroy');
+
 });
 
+// ─── Auth (Breeze) ────────────────────────────────────────────
 require __DIR__.'/auth.php';
