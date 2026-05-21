@@ -6,12 +6,12 @@ use Illuminate\Support\Facades\Route;
 
 // ─── Redirection racine ───────────────────────────────────────
 Route::get('/', function () {
-    return redirect()->route('candidatures.index');
+    return redirect()->route('dashboard');
 });
 
 // ─── Dashboard (requis par Breeze après login) ────────────────
 Route::get('/dashboard', function () {
-    return redirect()->route('candidatures.index');
+    return view('dashboard');
 })->middleware(['auth'])->name('dashboard');
 
 // ─── Routes protégées ────────────────────────────────────────
