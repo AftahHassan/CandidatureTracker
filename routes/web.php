@@ -45,6 +45,13 @@ Route::middleware('auth')->group(function () {
     Route::delete('candidatures/{candidature}/entretiens/{entretien}', [EntretienController::class, 'destroy'])
         ->name('entretiens.destroy');
 
+      Route::get('entretiens', function () {
+        $entretiens = \App\Models\Entretien::whereHas('candidature', function($q) {
+            $q->where('user_id', auth()->id());
+        })->with('candidature')->orderBy('date_heure')->get();
+        return view('entretiens.index', compact('entretiens'));
+    })->name('entretiens.index');
+
 });
 
 // ─── Auth (Breeze) ────────────────────────────────────────────
