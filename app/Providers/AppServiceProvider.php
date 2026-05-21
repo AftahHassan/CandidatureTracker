@@ -6,6 +6,8 @@ use App\Models\Candidature;
 use App\Policies\CandidaturePolicy;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
+use App\Models\Entretien;
+use App\Policies\EntretienPolicy;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -18,5 +20,6 @@ class AppServiceProvider extends ServiceProvider
     {
         // Enregistrement de la Policy
         Gate::policy(Candidature::class, CandidaturePolicy::class);
+        Gate::policy(Entretien::class, EntretienPolicy::class);
     }
 }
