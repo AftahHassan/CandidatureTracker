@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CandidatureController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\EntretienController;
 
 // Page d'accueil → redirige vers la liste
 Route::get('/', function () {
