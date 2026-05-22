@@ -1,58 +1,261 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# CandidatureTracker
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Application web développée avec Laravel permettant de gérer et suivre les candidatures d’emploi.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+# Description
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+CandidatureTracker est une plateforme de gestion des candidatures qui aide les utilisateurs à :
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+* centraliser leurs candidatures
+* suivre les entretiens
+* gérer les statuts
+* organiser les relances
+* archiver les candidatures
 
-## Learning Laravel
+Le projet a été développé avec une architecture MVC en utilisant le framework Laravel.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+---
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+# Fonctionnalités principales
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+## Authentification
 
-## Agentic Development
+* Inscription
+* Connexion
+* Déconnexion
+* Protection des routes
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+---
 
-```bash
-composer require laravel/boost --dev
+## Gestion des candidatures
 
-php artisan boost:install
+* Ajouter une candidature
+* Modifier une candidature
+* Supprimer une candidature
+* Archiver / Restaurer
+* Gestion des priorités
+* Gestion des statuts
+
+---
+
+## Gestion des entretiens
+
+* Ajouter un entretien
+* Modifier un entretien
+* Supprimer un entretien
+* Suivi des résultats
+
+---
+
+## Sécurité
+
+* Middleware Auth
+* Policies Laravel
+* Validation des formulaires
+* Protection CSRF
+
+---
+
+# Technologies utilisées
+
+| Technologie    | Description             |
+| -------------- | ----------------------- |
+| PHP 8.3        | Langage backend         |
+| Laravel 13     | Framework PHP MVC       |
+| MySQL / SQLite | Base de données         |
+| Blade          | Templates Laravel       |
+| Tailwind CSS   | Interface utilisateur   |
+| Laravel Breeze | Authentification        |
+| Eloquent ORM   | Gestion base de données |
+| Git & GitHub   | Versioning              |
+
+---
+
+# Architecture MVC
+
+```text id="vt2f9d"
+Utilisateur
+↓
+Routes
+↓
+Controllers
+↓
+Models
+↓
+Base de données
+↓
+Views Blade
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+---
 
-## Contributing
+# Structure de la base de données
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## users
 
-## Code of Conduct
+* id
+* name
+* email
+* password
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+---
 
-## Security Vulnerabilities
+## candidatures
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+* id
+* user_id
+* entreprise
+* poste
+* statut
+* priorite
+* notes
+* date_candidature
 
-## License
+---
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## entretiens
+
+* id
+* candidature_id
+* type
+* date_entretien
+* resultat
+* notes
+
+---
+
+# Installation du projet
+
+## 1. Cloner le projet
+
+```bash id="7rq3sw"
+git clone https://github.com/AftahHassan/CandidatureTracker.git
+```
+
+---
+
+## 2. Entrer dans le dossier
+
+```bash id="o5mcjv"
+cd CandidatureTracker
+```
+
+---
+
+## 3. Installer les dépendances
+
+```bash id="wpk7ut"
+composer install
+npm install
+```
+
+---
+
+## 4. Copier le fichier .env
+
+```bash id="o3b3yw"
+cp .env.example .env
+```
+
+---
+
+## 5. Générer la clé Laravel
+
+```bash id="q5t0rk"
+php artisan key:generate
+```
+
+---
+
+## 6. Configurer la base de données
+
+Modifier le fichier :
+
+```text id="hm8lb0"
+.env
+```
+
+---
+
+# Exemple MySQL
+
+```env id="d3z9ha"
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=candidaturetracker
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+---
+
+## 7. Lancer les migrations
+
+```bash id="gxskux"
+php artisan migrate
+```
+
+---
+
+## 8. Démarrer le serveur
+
+```bash id="y06g5q"
+php artisan serve
+```
+
+---
+
+# Méthodologie utilisée
+
+Le projet a été développé avec une méthodologie Agile en utilisant le framework Kanban.
+
+Outils utilisés :
+
+* Jira
+* Git
+* GitHub
+
+Organisation :
+
+* User Stories
+* Feature branches
+* Suivi Kanban
+
+---
+
+# Branches Git
+
+Exemples de branches utilisées :
+
+```text id="n1oow6"
+feature/crud-candidatures
+feature/install-breeze-telescope
+feature/env-configuration
+```
+
+---
+
+# Améliorations futures
+
+* Notifications email
+* Dashboard avancé
+* API REST
+* Calendrier entretiens
+* Version mobile
+
+---
+
+# Auteur
+
+Projet développé par :
+
+```text id="h98t54"
+AFTAH Hassan
+```
+
+---
+
+
