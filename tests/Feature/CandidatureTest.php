@@ -2,9 +2,7 @@
 
 use App\Models\User;
 use App\Models\Candidature;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 
-uses(RefreshDatabase::class);
 
 // ─── Helpers ──────────────────────────────────────────────────
 
