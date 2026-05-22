@@ -18,6 +18,7 @@ class Candidature extends Model
         'priorite',
         'notes',
         'date_candidature',
+        'fichier',
     ];
 
     // Une candidature appartient à un user

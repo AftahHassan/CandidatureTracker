@@ -21,6 +21,7 @@ class StoreCandidatureRequest extends FormRequest
             'priorite'         => 'required|in:faible,moyenne,haute',
             'notes'            => 'nullable|string',
             'date_candidature' => 'required|date',
+            'fichier'          => 'nullable|file|mimes:pdf,doc,docx|max:10240',
         ];
     }
 }

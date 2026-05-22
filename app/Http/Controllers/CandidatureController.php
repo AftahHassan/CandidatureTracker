@@ -7,6 +7,7 @@ use App\Http\Requests\StoreCandidatureRequest;
 use App\Http\Requests\UpdateCandidatureRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Storage;
 
 class CandidatureController
 {
@@ -35,8 +36,17 @@ class CandidatureController
 
     public function store(StoreCandidatureRequest $request)
     {
+
+        $data = $request->validated();
+      // Upload du fichier si présent
+        if ($request->hasFile('fichier')) {
+            $data['fichier'] = $request->file('fichier')
+                ->store('candidatures', 'public');
+        }
+
+
         Candidature::create([
-            ...$request->validated(),
+            ...$data,
             'user_id' => auth()->id(),
         ]);
 
@@ -60,7 +70,19 @@ class CandidatureController
     public function update(UpdateCandidatureRequest $request, Candidature $candidature)
     {
         Gate::authorize('update', $candidature);
-        $candidature->update($request->validated());
+
+        $data = $request->validated();
+         // Nouveau fichier uploadé
+        if ($request->hasFile('fichier')) {
+            // Supprimer l'ancien fichier du disque
+            if ($candidature->fichier) {
+                Storage::disk('public')->delete($candidature->fichier);
+            }
+            $data['fichier'] = $request->file('fichier')
+                ->store('candidatures', 'public');
+        }
+
+        $candidature->update($data);
 
         return redirect()->route('candidatures.index')
             ->with('success', 'Candidature modifiée avec succès !');
@@ -99,6 +121,11 @@ class CandidatureController
     public function destroy(Candidature $candidature)
     {
         Gate::authorize('delete', $candidature);
+         // Supprimer le fichier du disque
+        if ($candidature->fichier) {
+            Storage::disk('public')->delete($candidature->fichier);
+        }
+        
         $candidature->forceDelete();
 
         return redirect()->route('candidatures.index');
